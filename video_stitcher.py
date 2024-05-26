@@ -7,7 +7,7 @@ from moviepy.editor import ImageSequenceClip
 
 
 class VideoStitcher:
-    def __init__(self, left_video_in_path, right_video_in_path, video_out_path, video_out_width=800, display=False):
+    def __init__(self, left_video_in_path, right_video_in_path, video_out_path, video_out_width=1280, display=False):
         # Initialize arguments
         self.left_video_in_path = left_video_in_path
         self.right_video_in_path = right_video_in_path
@@ -49,7 +49,7 @@ class VideoStitcher:
     @staticmethod
     def detect_and_extract(image):
         # Detect and extract features from the image (DoG keypoint detector and SIFT feature extractor)
-        descriptor = cv2.xfeatures2d.SIFT_create()
+        descriptor = cv2.SIFT_create()
         (keypoints, features) = descriptor.detectAndCompute(image, None)
 
         # Convert the keypoints from KeyPoint objects to numpy arrays
@@ -152,12 +152,12 @@ class VideoStitcher:
         print('[INFO]: Saving {} in {}'.format(self.video_out_path.split('/')[-1],
                                                os.path.dirname(self.video_out_path)))
         clip = ImageSequenceClip(frames, fps=fps)
-        clip.write_videofile(self.video_out_path, codec='mpeg4', audio=False, progress_bar=True, verbose=False)
+        clip.write_videofile(self.video_out_path, codec='mpeg4', audio=False, verbose=False)
         print('[INFO]: {} saved'.format(self.video_out_path.split('/')[-1]))
 
 
 # Example call to 'VideoStitcher'
-stitcher = VideoStitcher(left_video_in_path='videos/bike_left_01.mp4',
-                         right_video_in_path='videos/bike_right_01.mp4',
-                         video_out_path='output/bike_01_stitched.mp4')
+stitcher = VideoStitcher(left_video_in_path='left-video.mp4',
+                         right_video_in_path='right-video.mp4',
+                         video_out_path='bike_01_stitched.mp4')
 stitcher.run()
